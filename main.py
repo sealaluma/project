@@ -4,7 +4,7 @@ from streamlit_lottie import st_lottie
 from components import page1, page2
 import json
 
-from project.components import chat_bot
+from project.components import chatbot, chatbot
 # from components import business, land_prediction, strategy, estimation, methodology, about, crime, life_quality
 
 # Apply theme from the config file
@@ -69,8 +69,8 @@ class MultiApp:
             page1.app()
         elif app == "карты":
             page2.app()
-        elif app == "чат-бот":
-            chat_bot.app()   
+        elif app == "Chat-BOT":
+            chatbot.app()   
         
         
         # if app == "🏷️ Прогноз стоимости":
@@ -98,7 +98,7 @@ multi_app = MultiApp()
 # Add your apps to the MultiApp instance
 multi_app.add_app("дом", page1.app)
 multi_app.add_app("карты", page2.app)
-multi_app.add_app("чат-бот", chat_bot.app)
+multi_app.add_app("чат-бот", chatbot.app)
 
 
 # multi_app.add_app("🏷️ Прогноз стоимости", land_prediction.app)
