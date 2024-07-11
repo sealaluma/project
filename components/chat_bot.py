@@ -9,8 +9,12 @@ from streamlit_folium import folium_static
 from folium.plugins import MarkerCluster  # Import MarkerCluster for clustering
 import plotly.express as px
 from streamlit_lottie import st_lottie
+import random
+import time
 import json
 
 def app():
     #Create the Streamlit app interface
-    st.title("Паге 3")
+    st.title("Chat-BOT")
+    st.subheader("Твой личный ассистент по построению бизнеса.")
+

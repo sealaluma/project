@@ -1,8 +1,10 @@
 import streamlit as st
 from streamlit_option_menu import option_menu
 from streamlit_lottie import st_lottie
-from components import page1, page2, page3
+from components import page1, page2
 import json
+
+from project.components import chat_bot
 # from components import business, land_prediction, strategy, estimation, methodology, about, crime, life_quality
 
 # Apply theme from the config file
@@ -28,7 +30,7 @@ class MultiApp:
         with st.sidebar:
             app = option_menu(
                 menu_title='Начало',
-                options=['дом', 'карты', 'чат-бот'],
+                options=['дом', 'карты', 'Chat-BOT'],
                 icons=['house-garden','house-garden','house-garden'],
                 menu_icon='house-garden',
                 default_index=0,  # Change the default index to 0 for "🏠 Прогноз стоимости"
@@ -68,7 +70,7 @@ class MultiApp:
         elif app == "карты":
             page2.app()
         elif app == "чат-бот":
-            page3.app()   
+            chat_bot.app()   
         
         
         # if app == "🏷️ Прогноз стоимости":
@@ -96,7 +98,7 @@ multi_app = MultiApp()
 # Add your apps to the MultiApp instance
 multi_app.add_app("дом", page1.app)
 multi_app.add_app("карты", page2.app)
-multi_app.add_app("чат-бот", page3.app)
+multi_app.add_app("чат-бот", chat_bot.app)
 
 
 # multi_app.add_app("🏷️ Прогноз стоимости", land_prediction.app)
