@@ -4,7 +4,7 @@ from streamlit_lottie import st_lottie
 from components import page1, page2
 import json
 
-from project.components import chatbot, chatbot
+from components import chatbot
 # from components import business, land_prediction, strategy, estimation, methodology, about, crime, life_quality
 
 # Apply theme from the config file
