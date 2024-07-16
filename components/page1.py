@@ -22,4 +22,4 @@ def app():
     # st.write("Sidebar Checkbox Value:", sidebar_checkbox)
 
 if __name__ == "__main__":
-    go_map()
+    app()
