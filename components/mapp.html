@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Show polygon information on click</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.js"></script>
+    <style>
+        body { margin: 0; padding: 0; }
+        #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+        .calculation-box {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(255, 255, 255, 0.72);
+            padding: 6px;
+            border-radius: 5px;
+            font-size: 14px;
+            max-width: 300px;
+        }
+        .button-container {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 1;
+        }
+        .button {
+            padding: 8px 16px;
+            background-color: rgba(128, 128, 128, 0.5);
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: rgba(128, 128, 128, 0.8);
+        }
+        #color-column {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1;
+            width: 200px;
+            background-color: rgba(255, 255, 255, 0.75);
+            padding: 5px;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div id="map"></div>
+<div class="calculation-box" id="sidebar"></div>
+<div class="button-container">
+    <button class="button" onclick="resetMap()">Сбросить</button>
+    <button class="button" onclick="toggleFullScreen()">Во весь экран</button>
+</div>
+
+<script>
+mapboxgl.accessToken = 'pk.eyJ1Ijoic2VhbGltYSIsImEiOiJjbHluNXlyNzgwM2hsMmtzNXkxdTNxMWZ0In0.9Cs1LGdZnNQHeHil8vnwRQ';
+const map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/streets-v11',
+    center: [76.879751, 43.24517], // Centered on Almaty
+    zoom: 12
+});
+
+map.on('load', () => {
+    // Function to add GeoJSON layer
+    function addGeoJSONLayer() {
+        fetch('/home/sealalima/map/office_arenda_layer.geojson')
+            .then(response => response.json())
+            .then(geojsonData => {
+                // Add a source for your GeoJSON data
+                map.addSource('custom-data', {
+                    'type': 'geojson',
+                    'data': geojsonData
+                });
+
+                // Add a layer showing your GeoJSON data
+                map.addLayer({
+                    'id': 'custom-data-layer',
+                    'type': 'fill',
+                    'source': 'custom-data',
+                    'paint': {
+                        'fill-color': 'rgba(241, 248, 246, 0.4)', // Light gray
+                        'fill-outline-color': 'rgba(151, 161, 169, 0.6)',
+                        'fill-opacity': 0.8
+                    }
+                });
+
+                // Click event for the custom data layer
+                map.on('click', 'custom-data-layer', (e) => {
+                    const properties = e.features[0].properties;
+                    let sidebarContent = '<div style="width: 100%;">';
+                    for (const key in properties) {
+                        if (properties.hasOwnProperty(key)) {
+                            let displayName = key;
+                            let valueDisplay = properties[key];
+                            sidebarContent += `<p><strong>${displayName}:</strong> ${valueDisplay}</p>`;
+                        }
+                    }
+
+                    sidebarContent += '</div>';
+                    document.getElementById('sidebar').innerHTML = sidebarContent;
+
+                    // Reset the style of all outlines
+                    map.setPaintProperty('custom-data-layer', 'fill-outline-color', 'rgba(200, 200, 200, 0.5)');
+                    map.setPaintProperty('custom-data-layer', 'fill-outline-width', 1);
+
+                    // Set a bold outline for the selected polygon
+                    map.setFilter('highlighted-polygon-outline', ['==', 'id', e.features[0].id]);
+                    map.setPaintProperty('highlighted-polygon-outline', 'line-width', 4);
+
+                    map.flyTo({
+                        center: e.lngLat,
+                        zoom: 16,
+                        essential: true
+                    });
+                });
+
+                // Change cursor to pointer when over the custom data layer
+                map.on('mouseenter', 'custom-data-layer', () => {
+                    map.getCanvas().style.cursor = 'pointer';
+                });
+
+                // Change cursor back when leaving the custom data layer
+                map.on('mouseleave', 'custom-data-layer', () => {
+                    map.getCanvas().style.cursor = '';
+                });
+            });
+    }
+
+    // Function to remove GeoJSON layer
+    function removeGeoJSONLayer() {
+        if (map.getSource('custom-data')) {
+            map.removeLayer('custom-data-layer');
+            map.removeSource('custom-data');
+        }
+    }
+
+    // Call the function to add the GeoJSON layer
+    addGeoJSONLayer();
+
+    function resetMap() {
+        map.setFilter('highlighted-polygon-outline', ['==', 'id', '']);
+        map.flyTo({
+            center: [76.879751, 43.24517],
+            zoom: 12,
+            essential: true
+        });
+        document.getElementById('sidebar').innerHTML = '';
+    }
+
+    function toggleFullScreen() {
+        var button = document.querySelector('.button-container .button:nth-child(2)');
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen();
+            button.textContent = 'Свернуть';
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+                button.textContent = 'Во весь экран';
+            }
+        }
+    }
+});
+</script>
+</body>
+</html>
