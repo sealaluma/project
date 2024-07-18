@@ -91,7 +91,7 @@ class MultiApp:
         #     methodology.app()
         # elif app == '📖 Экономика':
         #     about.app()
-         
+
 # Create an instance of MultiApp and add your apps
 multi_app = MultiApp()
 
@@ -111,7 +111,6 @@ multi_app.add_app("чат-бот", chatbot.app)
 # multi_app.add_app("📒 Методика", methodology.app)
 # multi_app.add_app("📖 Экономика", about.app)
 
+
 # Run the MultiApp
 multi_app.run()
-
-
