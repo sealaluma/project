@@ -3,6 +3,7 @@ from streamlit_option_menu import option_menu
 from streamlit_lottie import st_lottie
 from components import page1, page2
 import json
+import base64
 
 from components import chatbot
 # from components import business, land_prediction, strategy, estimation, methodology, about, crime, life_quality
@@ -43,6 +44,7 @@ class MultiApp:
 
             )
         
+
         # with st.sidebar:
         #     app = option_menu(
         #         menu_title='Начало',
@@ -100,6 +102,66 @@ multi_app.add_app("дом", page1.app)
 multi_app.add_app("карты", page2.app)
 multi_app.add_app("чат-бот", chatbot.app)
 
+def get_base64_of_bin_file(bin_file):
+    with open(bin_file, 'rb') as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
+
+def set_background(png_file):
+    bin_str = get_base64_of_bin_file(png_file)
+    page_bg_img = f'''
+    <style>
+    .stApp {{
+        background-image: url("data:image/png;base64,{bin_str}");
+        background-size: cover;
+        background-attachment: fixed;
+    }}
+    </style>
+    '''
+    st.markdown(page_bg_img, unsafe_allow_html=True)
+
+# Укажите путь к вашему файлу изображения
+set_background('image/ata3.png')
+
+# def get_base64_of_bin_file(bin_file):
+#     with open(bin_file, 'rb') as f:
+#         data = f.read()
+#     return base64.b64encode(data).decode()
+
+# def set_background(png_file):
+#     bin_str = get_base64_of_bin_file(png_file)
+#     page_bg_img = f'''
+#     <style>
+#     .stApp {{
+#         background-image: url("data:image/png;base64,{bin_str}");
+#         background-size: cover;
+#         background-attachment: fixed;
+#         position: relative;
+#     }}
+#     .overlay {{
+#         position: absolute;
+#         top: 0;
+#         left: 0;
+#         right: 0;
+#         bottom: 0;
+#         background-color: rgba(255, 255, 255, 0.7); /* Change this color and opacity as needed */
+#         z-index: 1;
+#     }}
+#     .content {{
+#         position: relative;
+#         z-index: 2;
+#     }}
+#     </style>
+#     <div class="overlay"></div>
+#     '''
+#     st.markdown(page_bg_img, unsafe_allow_html=True)
+
+# # Укажите путь к вашему файлу изображения
+# set_background('image/ata1.png')
+
+# st.markdown('<div class="content">', unsafe_allow_html=True)
+# st.image('image/ata1.png', caption='Sample Image')
+# st.markdown('</div>', unsafe_allow_html=True)
 
 # multi_app.add_app("🏷️ Прогноз стоимости", land_prediction.app)
 # multi_app.add_app("🏙️ Рекомендации", recommendations.app)
