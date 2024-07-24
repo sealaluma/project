@@ -1,8 +1,10 @@
 import streamlit as st
 import streamlit.components.v1 as components
+from streamlit_lottie import st_lottie
+import json
 
 def app():
-    st.title("Карта карты по г. Алматы")
+    st.title("Карта г. Алматы")
     st.markdown("Это мое болото, и я вас сюда не приглашал!")
 
     # Optional: Add Streamlit widgets or interaction here
@@ -20,6 +22,12 @@ def app():
 
     # st.write("Sidebar Slider Value:", sidebar_slider)
     # st.write("Sidebar Checkbox Value:", sidebar_checkbox)
+
+    with st.sidebar:
+        with open("data/urban.json", "r", errors='ignore') as f:
+            data = json.load(f)
+        st_lottie(data)
+
 
 if __name__ == "__main__":
     app()
