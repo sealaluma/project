@@ -32,7 +32,7 @@ class MultiApp:
         with st.sidebar:
             app = option_menu(
                 menu_title='📌Меню',
-                options=['📍Главная', 'карты', '🤖Chat-BOT'],
+                options=['📍Главная', '🏙️Информация по районам Алматы', '🤖Chat-BOT'],
                 icons=['house-garden','house-garden','house-garden'],
                 menu_icon='house-garden',
                 default_index=0,  # Change the default index to 0 for "🏠 Прогноз стоимости"
@@ -49,7 +49,7 @@ class MultiApp:
         # Display selected app based on user choice
         if app == "📍Главная":
             page1.app()
-        elif app == "карты":
+        elif app == "🏙️Информация по районам Алматы":
             page2.app()
         elif app == "🤖Chat-BOT":
             chatbot.app()   
@@ -60,9 +60,9 @@ class MultiApp:
 multi_app = MultiApp()
 
 # Add your apps to the MultiApp instance
-multi_app.add_app("дом", page1.app)
-multi_app.add_app("карты", page2.app)
-multi_app.add_app("чат-бот", chatbot.app)
+multi_app.add_app("📍Главная", page1.app)
+multi_app.add_app("🏙️Информация по районам Алматы", page2.app)
+multi_app.add_app("🤖Chat-BOT", chatbot.app)
 
 def get_base64_of_bin_file(bin_file):
     with open(bin_file, 'rb') as f:
